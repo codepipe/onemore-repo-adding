@@ -1,30 +1,55 @@
 pipeline {
     agent any
     stages {
-        stage ("this is the first stage") {
+        stage ("java project") {
             steps {
-                bat "ipconfig"
+                parallel (
+                    CODEPULL: {
+                        echo "pulling code from GIT branch1 for java projects"
+                        },
+                    BuildMAVEN: {
+                        echo "buld the war pkgs"
+                        },
+                    DeplloyTOMCAT: {
+                        echo "deploy war to the tomcat"
+                        }
+                )
             }
         }
-        stage ("this is the second stage") {
+        stage ("C# project") {
             steps {
-                echo "PSVersionTable"
+                parallel (
+                    CODEPULL: {
+                        echo "pulling code form C# Branch"
+                        },
+                    BUildMSBUILD: {
+                        echo "build with msbuild to generate Msi, exe dll pkgs"
+                        }
+                )
             }
         }
-        stage ("check the java version") {
+        stage ("Python Project") {
             steps {
-                bat "java -version"
+                parallel (
+                    CODEPULL: {
+                        echo "pulling the code form Python Branch"
+                        },
+                    BUILDPYBUILD: {
+                        echo "building the code form PYBUILD"
+                        }
+                )
             }
         }
-        stage ("create the folders of below list") {
+        stage ("nodejs project") {
             steps {
-               powershell 'New-Item -Type directory "c:\\sharat\\vikas\\vinaya\\thomson\\prakash"'
-            }
-           
-        }
-        stage ("successfully ran the sample pipline script") {
-            steps {
-                echo "yes ran"
+                parallel (
+                    CODEPULL: {
+                        echo "pulling the code form nodejs branch"
+                        },
+                    BUILDNPM: {
+                        echo "build with npm build to generate .js"
+                        }
+                )
             }
         }
     }
